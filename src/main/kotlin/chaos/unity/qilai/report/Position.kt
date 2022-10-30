@@ -1,4 +1,4 @@
-package chaos.unity.qilai
+package chaos.unity.qilai.report
 
 data class Position(
     val startLine: Int,
