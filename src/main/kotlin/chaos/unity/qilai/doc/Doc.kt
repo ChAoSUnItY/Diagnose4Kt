@@ -5,7 +5,6 @@ import chaos.unity.qilai.color.ColorApplier
 import chaos.unity.qilai.color.FgColor
 import chaos.unity.qilai.color.Modifier
 import java.io.PrintStream
-import java.lang.StringBuilder
 
 open class Doc private constructor(
     val content: String,

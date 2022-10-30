@@ -5,7 +5,7 @@ import chaos.unity.qilai.color.FgColor
 import chaos.unity.qilai.color.Modifier
 import java.io.PrintStream
 
-class Document(private val docs: List<Doc>) {
+class Document private constructor(private val docs: List<Doc>) {
     fun print(stream: PrintStream) {
         var currentColumn = 1
 
