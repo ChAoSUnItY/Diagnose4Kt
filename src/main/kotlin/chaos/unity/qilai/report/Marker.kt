@@ -1,6 +1,5 @@
 package chaos.unity.qilai.report
 
-import chaos.unity.qilai.Pretty
 import chaos.unity.qilai.color.FgColor
 
 sealed class Marker<Msg> : Comparable<Marker<Msg>> where Msg : Pretty<Msg> {

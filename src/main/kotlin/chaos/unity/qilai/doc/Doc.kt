@@ -13,11 +13,6 @@ open class Doc private constructor(
     val modifiers: Array<out Modifier> = arrayOf(),
     val aligned: Boolean = false
 ) {
-    object Colon: Doc(":")
-    object Space: Doc(" ")
-    object Line: Doc("\n")
-    object Empty: Doc("")
-
     val width: Int =
         content.split("\n")
             .maxOfWith(Int::compareTo, String::length)
@@ -31,8 +26,8 @@ open class Doc private constructor(
 
         var nbNewLines = content.count { it == '\n' }
         val shouldAddNewLines = content != "\n"
-
         val splitContent = if (shouldAddNewLines) content.split('\n') else listOf("\n")
+
         for (line in splitContent) {
             var applier = ColorApplier(if (shouldAddNewLines && nbNewLines-- > 0) "${line}\n" else line)
 
@@ -51,10 +46,25 @@ open class Doc private constructor(
     }
 
     class Builder<T>(private val content: T) {
+        companion object {
+            fun colon(): Builder<String> =
+                Builder(":")
+
+            fun space(): Builder<String> =
+                Builder(" ")
+
+            fun line(): Builder<String> =
+                Builder("\n")
+
+            fun empty(): Builder<String> =
+                Builder("")
+        }
+
         private var fgColor: FgColor? = null
         private var bgColor: BgColor? = null
         private var modifiers: Array<out Modifier> = arrayOf()
         private var aligned: Boolean = false
+        private val stringifyContent by lazy(content::toString)
 
         fun colors(fgColor: FgColor?, bgColor: BgColor?, vararg modifiers: Modifier): Builder<T> {
             this.fgColor = fgColor
@@ -68,7 +78,10 @@ open class Doc private constructor(
             return this
         }
 
+        fun width(): Int =
+            stringifyContent.length
+
         fun build(): Doc =
-            Doc(content.toString(), fgColor, bgColor, modifiers, aligned)
+            Doc(stringifyContent, fgColor, bgColor, modifiers, aligned)
     }
 }
