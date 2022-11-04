@@ -10,7 +10,6 @@ import java.util.*
 import kotlin.math.max
 
 class Report<Msg>(
-    private val charSet: CharSet,
     private val isError: Boolean,
     private val msg: Msg,
     private val markers: Map<Position, Marker<Msg>>,
@@ -28,7 +27,7 @@ class Report<Msg>(
                 .append(paddingColors(Doc.Builder(padding.toString().repeat(max - docBuilder.width()))))
     }
 
-    fun pretty(): Document.Builder {
+    fun pretty(charSet: CharSet): Document.Builder {
         val docBuilder = Document.Builder()
         val sortedMarkers = markers.entries
             .sortedBy { it.key.startLine }
@@ -49,16 +48,16 @@ class Report<Msg>(
             .append(msg.pretty().align())
 
         for ((isFirst, markers) in groupedMarkers) {
-            docBuilder.append(prettyAllSubReports(isError, maxLineNumberLength, isFirst, markers))
+            docBuilder.append(prettyAllSubReports(charSet, isError, maxLineNumberLength, isFirst, markers))
         }
 
         if (hints.isNotEmpty()) {
             docBuilder.append(Doc.Builder.line())
                 .append(Doc.Builder.space())
-                .append(dotPrefix(maxLineNumberLength))
+                .append(dotPrefix(maxLineNumberLength, charSet))
         }
 
-        docBuilder.append(prettyAllHints(hints, maxLineNumberLength))
+        docBuilder.append(prettyAllHints(hints, maxLineNumberLength, charSet))
             .append(Doc.Builder.line())
 
         if (!(markers.isEmpty() && hints.isEmpty())) {
@@ -101,6 +100,7 @@ class Report<Msg>(
     }
 
     private fun prettyAllSubReports(
+        charSet: CharSet,
         isError: Boolean,
         maxLineNumberLength: Int,
         isFirst: Boolean,
@@ -129,7 +129,7 @@ class Report<Msg>(
                 .append(Doc.Builder(reportFile).colors(FgColor.GREEN, null, Modifier.BOLD))
         } else {
             fileMarker.append(Doc.Builder.space())
-                .append(dotPrefix(maxLineNumberLength))
+                .append(dotPrefix(maxLineNumberLength, charSet))
                 .append(Doc.Builder.line())
                 .append(pad(maxLineNumberLength + 2, charSet.line, Doc.Builder.empty()) {
                     it.colors(
@@ -142,6 +142,7 @@ class Report<Msg>(
                 .append(Doc.Builder(reportFile).colors(FgColor.GREEN, null, Modifier.BOLD))
                 .append(
                     prettyAllLines(
+                        charSet,
                         isError,
                         maxLineNumberLength,
                         sortedMarkerPerLine,
@@ -156,10 +157,21 @@ class Report<Msg>(
             .append(fileMarker)
             .append(Doc.Builder.line())
             .append(Doc.Builder.space())
-            .append(pipePrefix(maxLineNumberLength))
+            .append(pipePrefix(maxLineNumberLength, charSet))
+            .append(
+                prettyAllLines(
+                    charSet,
+                    isError,
+                    maxLineNumberLength,
+                    sortedMarkerPerLine,
+                    multilineMarkers,
+                    allLineNumbersInReport
+                )
+            )
     }
 
     private fun prettyAllLines(
+        charSet: CharSet,
         isError: Boolean,
         maxLineNumberLength: Int,
         inlineMarkers: List<Map.Entry<Int, List<Map.Entry<Position, Marker<Msg>>>>>,
@@ -210,7 +222,7 @@ class Report<Msg>(
 
             Document.Builder()
                 .append(Doc.Builder.line())
-                .append(linePrefix(maxLineNumberLength, it))
+                .append(linePrefix(maxLineNumberLength, it, charSet))
                 .append(Doc.Builder.space())
                 .append(additionalPrefix)
                 .append(getLine(allMarkersInLine, it, isError))
@@ -219,6 +231,7 @@ class Report<Msg>(
                         multilineMarkers.isNotEmpty(),
                         inSpanOfMultiLine,
                         firstMultilineMarkerColor,
+                        charSet,
                         isError,
                         maxLineNumberLength,
                         allInlineMarkersInLine
@@ -231,7 +244,7 @@ class Report<Msg>(
             val prefix = Document.Builder()
                 .append(Doc.Builder.line())
                 .append(Doc.Builder.space())
-                .append(dotPrefix(maxLineNumberLength))
+                .append(dotPrefix(maxLineNumberLength, charSet))
                 .append(Doc.Builder.space())
             val prefixWithBar = Document.Builder()
                 .append(prefix)
@@ -241,12 +254,12 @@ class Report<Msg>(
                 .append(prefix)
 
             for (i in multilineMarkers.lastIndex downTo 1) {
-                doc.append(constructMultilineMarkerMessage(multilineMarkers[i], isError, false))
+                doc.append(constructMultilineMarkerMessage(multilineMarkers[i], charSet, isError, false))
                     .append(prefix)
             }
 
             if (multilineMarkers.isNotEmpty()) {
-                doc.append(constructMultilineMarkerMessage(multilineMarkers.first(), isError, true))
+                doc.append(constructMultilineMarkerMessage(multilineMarkers.first(), charSet, isError, true))
             }
         }
 
@@ -287,6 +300,7 @@ class Report<Msg>(
         hasMultilines: Boolean,
         inSpanOfMultiline: Boolean,
         firstMultilineMarkerColor: FgColor?,
+        charSet: CharSet,
         isError: Boolean,
         maxLineNumberLength: Int,
         allInlineMarkersInLine: List<Map.Entry<Position, Marker<Msg>>>
@@ -307,7 +321,7 @@ class Report<Msg>(
 
             documentBuilder.append(Doc.Builder.line())
                 .append(Doc.Builder.space())
-                .append(dotPrefix(maxLineNumberLength))
+                .append(dotPrefix(maxLineNumberLength, charSet))
                 .append(Doc.Builder.space())
                 .append(specialPrefix)
 
@@ -354,7 +368,14 @@ class Report<Msg>(
                     if (hasSuccessor) charSet.pipeWithRightLine
                     else charSet.lowerRightPipe
                 val prefix = Document.Builder()
-                    .append(processLineStart(pos, specialPrefix, dotPrefix(maxLineNumberLength), pipesBeforePreRender))
+                    .append(
+                        processLineStart(
+                            pos,
+                            specialPrefix,
+                            dotPrefix(maxLineNumberLength, charSet),
+                            pipesBeforePreRender
+                        )
+                    )
                     .append(Doc.Builder(currentPipe).colors(marker.markerColor(isError), null))
                     .append(
                         Doc.Builder(charSet.line.toString().repeat(lastStartPos))
@@ -372,14 +393,14 @@ class Report<Msg>(
         return documentBuilder
     }
 
-    private fun prettyAllHints(hints: List<Msg>, maxLineNumberLength: Int): Document.Builder {
+    private fun prettyAllHints(hints: List<Msg>, maxLineNumberLength: Int, charSet: CharSet): Document.Builder {
         val documentBuilder = Document.Builder()
 
         if (hints.isNotEmpty()) {
             val prefix = Document.Builder()
                 .append(Doc.Builder.line())
                 .append(Doc.Builder.space())
-                .append(pipePrefix(maxLineNumberLength))
+                .append(pipePrefix(maxLineNumberLength, charSet))
 
             for (hint in hints) {
                 documentBuilder.append(prefix)
@@ -413,19 +434,19 @@ class Report<Msg>(
         }
     }
 
-    private fun pipePrefix(max: Int): Document.Builder =
+    private fun pipePrefix(max: Int, charSet: CharSet): Document.Builder =
         Document.Builder()
             .append(pad(max, ' ', Doc.Builder.empty(), ::identity))
             .append(Doc.Builder.space())
             .append(Doc.Builder(charSet.pipe).colors(FgColor.GRAY, null, Modifier.BOLD))
 
-    private fun dotPrefix(max: Int): Document.Builder =
+    private fun dotPrefix(max: Int, charSet: CharSet): Document.Builder =
         Document.Builder()
             .append(pad(max, ' ', Doc.Builder.empty(), ::identity))
             .append(Doc.Builder.space())
             .append(Doc.Builder(charSet.dot).colors(FgColor.GRAY, null, Modifier.BOLD))
 
-    private fun linePrefix(maxLineNumberLength: Int, line: Int): Document.Builder =
+    private fun linePrefix(maxLineNumberLength: Int, line: Int, charSet: CharSet): Document.Builder =
         Document.Builder()
             .append(
                 pad(
@@ -440,6 +461,7 @@ class Report<Msg>(
 
     private fun constructMultilineMarkerMessage(
         entry: Map.Entry<Position, Marker<Msg>>,
+        charSet: CharSet,
         isError: Boolean,
         isLast: Boolean
     ): Document.Builder =

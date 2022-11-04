@@ -16,11 +16,11 @@ class Diagnostic<Msg>(private val reports: MutableList<Report<Msg>> = mutableLis
         return this
     }
 
-    fun print(stream: PrintStream, withColors: Boolean) {
+    fun print(stream: PrintStream, charSet: CharSet, withColors: Boolean) {
         val documentBuilder = Document.Builder()
 
         for (report in reports) {
-            documentBuilder.append(report.pretty())
+            documentBuilder.append(report.pretty(charSet))
                 .append(Doc.Builder.line())
         }
 

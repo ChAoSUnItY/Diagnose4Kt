@@ -41,7 +41,7 @@ open class Doc private constructor(
                 applier = applier.apply(modifier)
             }
 
-            stream.print(applier)
+            stream.print(applier.string)
         }
     }
 
