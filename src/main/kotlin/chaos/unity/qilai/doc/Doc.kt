@@ -10,7 +10,7 @@ open class Doc private constructor(
     val content: String,
     val fgColor: FgColor? = null,
     val bgColor: BgColor? = null,
-    val modifiers: Array<out Modifier> = arrayOf(),
+    val modifiers: List<Modifier> = listOf(),
     val aligned: Boolean = false
 ) {
     val width: Int =
@@ -62,14 +62,14 @@ open class Doc private constructor(
 
         private var fgColor: FgColor? = null
         private var bgColor: BgColor? = null
-        private var modifiers: Array<out Modifier> = arrayOf()
+        private var modifiers: List<Modifier> = listOf()
         private var aligned: Boolean = false
         private val stringifyContent by lazy(content::toString)
 
-        fun colors(fgColor: FgColor?, bgColor: BgColor?, vararg modifiers: Modifier): Builder<T> {
+        fun colors(fgColor: FgColor?, bgColor: BgColor?, vararg modifiers: Modifier?): Builder<T> {
             this.fgColor = fgColor
             this.bgColor = bgColor
-            this.modifiers = modifiers
+            this.modifiers = modifiers.filterNotNull()
             return this
         }
 

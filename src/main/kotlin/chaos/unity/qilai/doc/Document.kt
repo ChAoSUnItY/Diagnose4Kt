@@ -47,7 +47,7 @@ class Document private constructor(private val docs: List<Doc>) {
             return this
         }
 
-        fun color(fgColor: FgColor?, bgColor: BgColor?, vararg modifiers: Modifier): Builder {
+        fun color(fgColor: FgColor?, bgColor: BgColor?, vararg modifiers: Modifier?): Builder {
             for (part in docs) {
                 part.colors(fgColor, bgColor, *modifiers)
             }
