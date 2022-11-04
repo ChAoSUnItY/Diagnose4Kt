@@ -53,12 +53,12 @@ class RenderTest {
 
     @Test
     fun noHintsAndNoMarkers() {
-        diagnostic.report(Report(true, StringPretty("Error with no marker and no hints"), mapOf()))
+        diagnostic.add(Report(true, StringPretty("Error with no marker and no hints"), mapOf()))
     }
 
     @Test
     fun singleMarkerNoHints() {
-        diagnostic.report(
+        diagnostic.add(
             Report(
                 true,
                 StringPretty("Error with one marker and no hints"),
@@ -72,7 +72,7 @@ class RenderTest {
 
     @Test
     fun simpleDiagnostic() {
-        diagnostic.report(
+        diagnostic.add(
             Report(
                 true,
                 StringPretty("Could not deduce constraint 'Num(a)' from the current context"),
@@ -91,7 +91,7 @@ class RenderTest {
 
     @Test
     fun multilineMessages() {
-        diagnostic.report(
+        diagnostic.add(
             Report(
                 true,
                 StringPretty("Could not deduce constraint 'Num(a)'\nfrom the current context"),
@@ -109,7 +109,7 @@ class RenderTest {
 
     @Test
     fun multipleFiles() {
-        diagnostic.report(
+        diagnostic.add(
             Report(
                 true,
                 StringPretty("Error on multiple files"),
@@ -129,7 +129,7 @@ class RenderTest {
 
     @Test
     fun noMarkerButSomeHints() {
-        diagnostic.report(
+        diagnostic.add(
             Report(
                 false,
                 StringPretty("Error with no markers but some hints"),
@@ -144,7 +144,7 @@ class RenderTest {
 
     @Test
     fun testCrossing() {
-        diagnostic.report(
+        diagnostic.add(
             Report(
                 false,
                 StringPretty("Ordered labels with crossing"),
