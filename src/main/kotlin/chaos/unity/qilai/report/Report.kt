@@ -308,7 +308,7 @@ class Report<Msg>(
         val documentBuilder = Document.Builder()
 
         if (allInlineMarkersInLine.isNotEmpty()) {
-            val markers = allInlineMarkersInLine.sortedBy { it.key.endLine }
+            val markers = allInlineMarkersInLine.sortedBy { it.key.endColumn }
             val maxMarkerColumn = markers.last().key.endColumn
             val specialPrefix =
                 if (inSpanOfMultiline) Document.Builder()
