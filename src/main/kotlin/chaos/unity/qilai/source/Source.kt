@@ -12,12 +12,7 @@ import java.io.File
             }.getOrNull()
 
         fun fromResource(path: String): Source? =
-            runCatching {
-                this::class.java.getResourceAsStream(path)
-                    ?.bufferedReader()
-                    ?.readLines()
-                    ?.let(::Source)
-            }.getOrNull()
+            this::class.java.getResource(path)?.file?.let { fromFile(File(it)) }
 
         fun fromString(string: String): Source =
             Source(string.split('\n'))
