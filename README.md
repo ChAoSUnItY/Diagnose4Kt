@@ -1,4 +1,4 @@
-# Qilai
+# Diagnose4Kt
 
 A Kotlin port of Java Library [Diagnose4J](https://github.com/Mesabloo/diagnose4j), 
 also as port of Haskell Library [Diagnose](https://github.com/mesabloo/diagnose), 

@@ -4,7 +4,7 @@ plugins {
     kotlin("jvm") version "1.7.10"
 }
 
-group = "chaos.unity.qilai"
+group = "chaos.unity.diagnostic4kt"
 version = "1.0-SNAPSHOT"
 
 repositories {

@@ -1,4 +1,4 @@
-package chaos.unity.qilai.color
+package chaos.unity.diagnostic4kt.color
 
 @JvmInline value class ColorApplier(val string: String) {
     fun apply(code: AnsiCode): ColorApplier =

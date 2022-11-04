@@ -1,9 +1,9 @@
-package chaos.unity.qilai.doc
+package chaos.unity.diagnostic4kt.doc
 
-import chaos.unity.qilai.color.BgColor
-import chaos.unity.qilai.color.ColorApplier
-import chaos.unity.qilai.color.FgColor
-import chaos.unity.qilai.color.Modifier
+import chaos.unity.diagnostic4kt.color.BgColor
+import chaos.unity.diagnostic4kt.color.ColorApplier
+import chaos.unity.diagnostic4kt.color.FgColor
+import chaos.unity.diagnostic4kt.color.Modifier
 import java.io.PrintStream
 
 open class Doc private constructor(

@@ -1,7 +1,7 @@
-package chaos.unity.qilai
+package chaos.unity.diagnostic4kt
 
-import chaos.unity.qilai.report.*
-import chaos.unity.qilai.source.SourceCache
+import chaos.unity.diagnostic4kt.report.*
+import chaos.unity.diagnostic4kt.source.SourceCache
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach

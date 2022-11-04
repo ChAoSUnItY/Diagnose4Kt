@@ -1,4 +1,4 @@
-package chaos.unity.qilai.color
+package chaos.unity.diagnostic4kt.color
 
 enum class BgColor(override val beginInt: Int) : AnsiCode {
     BLACK(40),

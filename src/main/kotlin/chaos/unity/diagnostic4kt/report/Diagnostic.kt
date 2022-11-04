@@ -1,7 +1,7 @@
-package chaos.unity.qilai.report
+package chaos.unity.diagnostic4kt.report
 
-import chaos.unity.qilai.doc.Doc
-import chaos.unity.qilai.doc.Document
+import chaos.unity.diagnostic4kt.doc.Doc
+import chaos.unity.diagnostic4kt.doc.Document
 import java.io.PrintStream
 import java.util.*
 

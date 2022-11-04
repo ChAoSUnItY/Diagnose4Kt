@@ -1,4 +1,4 @@
-package chaos.unity.qilai.color
+package chaos.unity.diagnostic4kt.color
 
 /**
  * The amount of codes required in order to jump from a foreground code to a background code. Equal to 10. For example,

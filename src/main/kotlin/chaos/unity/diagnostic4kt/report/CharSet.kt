@@ -1,4 +1,4 @@
-package chaos.unity.qilai.report
+package chaos.unity.diagnostic4kt.report
 
 sealed class CharSet {
     abstract val pipe: Char

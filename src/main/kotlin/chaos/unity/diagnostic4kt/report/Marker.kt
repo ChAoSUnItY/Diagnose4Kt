@@ -1,6 +1,6 @@
-package chaos.unity.qilai.report
+package chaos.unity.diagnostic4kt.report
 
-import chaos.unity.qilai.color.FgColor
+import chaos.unity.diagnostic4kt.color.FgColor
 
 sealed class Marker<Msg> : Comparable<Marker<Msg>> where Msg : Pretty<Msg> {
     abstract val msg: Msg

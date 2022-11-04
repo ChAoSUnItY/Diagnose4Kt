@@ -1,3 +1,3 @@
 
-rootProject.name = "Qilai"
+rootProject.name = "Diagnose4Kt"
 

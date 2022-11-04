@@ -1,11 +1,11 @@
-package chaos.unity.qilai.report
+package chaos.unity.diagnostic4kt.report
 
-import chaos.unity.qilai.color.FgColor
-import chaos.unity.qilai.color.Modifier
-import chaos.unity.qilai.doc.Doc
-import chaos.unity.qilai.doc.Document
-import chaos.unity.qilai.identity
-import chaos.unity.qilai.source.SourceCache
+import chaos.unity.diagnostic4kt.color.FgColor
+import chaos.unity.diagnostic4kt.color.Modifier
+import chaos.unity.diagnostic4kt.doc.Doc
+import chaos.unity.diagnostic4kt.doc.Document
+import chaos.unity.diagnostic4kt.identity
+import chaos.unity.diagnostic4kt.source.SourceCache
 import java.util.*
 import kotlin.math.max
 

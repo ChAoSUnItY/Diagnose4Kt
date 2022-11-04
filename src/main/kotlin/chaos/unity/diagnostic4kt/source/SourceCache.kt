@@ -1,4 +1,4 @@
-package chaos.unity.qilai.source
+package chaos.unity.diagnostic4kt.source
 
 import java.io.File
 
