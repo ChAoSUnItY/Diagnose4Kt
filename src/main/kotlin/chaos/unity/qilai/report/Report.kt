@@ -383,6 +383,7 @@ class Report<Msg>(
                     )
                     .append(Doc.Builder(charSet.point).colors(marker.markerColor(isError), null))
                     .append(Doc.Builder.space())
+                    .append(marker.msg.pretty().color(marker.markerColor(isError), null).align())
 
                 documentBuilder.append(Doc.Builder.line())
                     .append(Doc.Builder.space())

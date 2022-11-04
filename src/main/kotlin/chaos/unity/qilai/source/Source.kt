@@ -20,7 +20,7 @@ import java.io.File
             }.getOrNull()
 
         fun fromString(string: String): Source =
-            Source(listOf(string))
+            Source(string.split('\n'))
 
         fun fromStrings(string: Collection<String>): Source =
             Source(string.toList())

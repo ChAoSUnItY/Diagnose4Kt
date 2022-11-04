@@ -5,6 +5,17 @@ import java.io.File
 object SourceCache {
     private val sources: MutableMap<String, Source> = mutableMapOf()
 
+    fun getSourceFromFileContent(filePath: String, content: String): Source {
+        if (sources.containsKey(filePath)) {
+            return sources[filePath]!!
+        }
+
+        val source = Source.fromString(content)
+        sources[filePath] = source
+
+        return source
+    }
+
     fun getSourceFromFilePath(filePath: String): Source? =
         sources[filePath]
 
