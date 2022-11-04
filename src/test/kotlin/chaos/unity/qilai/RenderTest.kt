@@ -41,12 +41,12 @@ class RenderTest {
 
     @AfterEach
     fun tearDown() {
-        println("--- With Unicode ---");
-        diagnostic.print(System.out, CharSet.Unicode, true);
-        println("--- With ASCII ---");
-        diagnostic.print(System.out, CharSet.ASCII, true);
-        println("--- Without colors ---");
-        diagnostic.print(System.out, CharSet.Unicode, false);
+        println("--- With Unicode ---")
+        diagnostic.print(System.out, CharSet.Unicode, true)
+        println("--- With ASCII ---")
+        diagnostic.print(System.out, CharSet.ASCII, true)
+        println("--- Without colors ---")
+        diagnostic.print(System.out, CharSet.Unicode, false)
 
         diagnostic.clear()
     }
@@ -67,6 +67,92 @@ class RenderTest {
                 )
             )
 
+        )
+    }
+
+    @Test
+    fun simpleDiagnostic() {
+        diagnostic.report(
+            Report(
+                true,
+                StringPretty("Could not deduce constraint 'Num(a)' from the current context"),
+                mapOf(
+                    Position(1, 25, 1, 30, "test.zc") to
+                            Marker.This(StringPretty("While applying function '+'")),
+                    Position(1, 11, 1, 16, "test.zc") to
+                            Marker.Where(StringPretty("'x' is supposed to have type 'a'")),
+                    Position(1, 8, 1, 9, "test.zc") to
+                            Marker.Where(StringPretty("type 'a' is bound here without constraints"))
+                ),
+                listOf(StringPretty("Adding 'Num(a)' to the list of constraints may solve this problem."))
+            )
+        )
+    }
+
+    @Test
+    fun multilineMessages() {
+        diagnostic.report(
+            Report(
+                true,
+                StringPretty("Could not deduce constraint 'Num(a)'\nfrom the current context"),
+                mapOf(
+                    Position(1, 25, 1, 30, "test.zc") to
+                            Marker.This(StringPretty("While applying function '+'")),
+                    Position(1, 11, 1, 16, "test.zc") to
+                            Marker.Where(StringPretty("'x' is supposed to have type 'a'")),
+                    Position(1, 8, 1, 9, "test.zc") to
+                            Marker.Where(StringPretty("type 'a' is bound here without constraints"))
+                ), listOf(StringPretty("Adding 'Num(a)' to the list of\nconstraints may solve this problem."))
+            )
+        )
+    }
+
+    @Test
+    fun multipleFiles() {
+        diagnostic.report(
+            Report(
+                true,
+                StringPretty("Error on multiple files"),
+                mapOf(
+                    Position(1, 5, 1, 7, "test.zc") to Marker.Where(StringPretty("Function already defined here")),
+                    Position(
+                        1,
+                        5,
+                        1,
+                        7,
+                        "somefile.zc"
+                    ) to Marker.This(StringPretty("Function `id` already declared in another module"))
+                )
+            )
+        )
+    }
+
+    @Test
+    fun noMarkerButSomeHints() {
+        diagnostic.report(
+            Report(
+                false,
+                StringPretty("Error with no markers but some hints"),
+                mapOf(),
+                listOf(
+                    StringPretty("My first hint on resolving this issue"),
+                    StringPretty("And a second one because I'm feeling nice today :)")
+                )
+            )
+        )
+    }
+
+    @Test
+    fun testCrossing() {
+        diagnostic.report(
+            Report(
+                false,
+                StringPretty("Ordered labels with crossing"),
+                mapOf(
+                    Position(1, 1, 1, 7, "somefile.zc") to Marker.This(StringPretty("leftmost label")),
+                    Position(1, 9, 1, 16, "somefile.zc") to Marker.Where(StringPretty("rightmost label"))
+                )
+            )
         )
     }
 }
